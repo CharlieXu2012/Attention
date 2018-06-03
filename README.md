@@ -14,7 +14,7 @@
 
 IF you want to run depth extraction:
 
-4) Copy the PANDORA depth images from the server, located in /srv/data/shared/PANDORA/DEPTH/ to ./PANDORA_depth/
+4) Copy and extract the PANDORA depth images from the server, located in /srv/data/shared/PANDORA/DEPTH/ to ./PANDORA_depth/
 
 IF not:
 

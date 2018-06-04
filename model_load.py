@@ -456,12 +456,12 @@ def evaluate_lstm(model, train, gt_train, test,
 
     return history, pred, cnf_matrix
 
-def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_test, modelshape):
+def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_test, modelshape,bs,ep):
     
     if modelshape==2:
 
         history = model.fit([np.concatenate([X_train[:,0:12], X_train[:,26:54]],1), np.concatenate([X_train[:,12:24], X_train[:,54:66]],1)], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=175,validation_data=([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1)], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+                 batch_size=bs, nb_epoch=ep,validation_data=([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1)], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
         pred = model.predict([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1)], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
@@ -469,7 +469,7 @@ def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_
 
     elif modelshape==3:
         history = model.fit([np.concatenate([X_train[:,0:12], X_train[:,26:54]],1), np.concatenate([X_train[:,12:24], X_train[:,54:66]],1),X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=175,validation_data=([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1),X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+                 batch_size=bs, nb_epoch=ep,validation_data=([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1),X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
         pred = model.predict([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1),X_depth_test], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
@@ -477,7 +477,7 @@ def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_
 
     if modelshape==1:
         history = model.fit([X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=175,validation_data=([X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+                 batch_size=bs, nb_epoch=ep,validation_data=([X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
         pred = model.predict([X_depth_test], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)

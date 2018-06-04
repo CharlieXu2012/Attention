@@ -41,7 +41,7 @@ Arguments:
   - Validation split (geometric features, depth, labels) in ./PANDORA_features/
   
  # To train the model:
- $python main_train_model.py --oversample False --model 3 --fusiontype 1 --type 0
+ $python main_train_model.py --oversample False --model 3 --fusiontype 1 --type 0 --bs 32 --ep 175
  
  Arguments:
  
@@ -52,6 +52,10 @@ Arguments:
   --fusiontype: Use early (0), fully connected (1) or late (2) fusion., type=int, default=1
   
   --type: Use average (0), max (1) or WSLF-LW (2) fusion., type=int, default=0
+
+  --bs: Batch size., type=int, default=32
+
+  --ep: Epochs., type=int, default=175
   
   
  Outputs:

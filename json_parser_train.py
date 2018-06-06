@@ -3,7 +3,6 @@ import os
 import numpy as np, h5py
 import scipy.io as sp
 import pandas as pd
-from load import load
 from depth import depthlist
 from feature_smooth import feature_smooth
 from utils import angle_between, cross_validation

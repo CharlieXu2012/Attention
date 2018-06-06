@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.decomposition import PCA
-from pca_trafo import pca_trafo
 from imblearn.over_sampling import SMOTE
 from experiments import plot_classes
 

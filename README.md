@@ -14,12 +14,15 @@
 
 IF you want to run depth extraction:
 
-4) Copy and extract the PANDORA depth images from the server, located in /srv/data/shared/PANDORA/DEPTH/ to ./PANDORA_depth/
+4) Copy and extract the PANDORA depth images from the server, located in /srv/data/shared/PANDORA/DEPTH/ or /srv/data/shared/PANDORA/PANDORA_DEPTH_cropped/ to ./PANDORA_depth/
 
 IF not:
 
 4) Move the file from ./PANDORA_depth/Pre/ to ./PANDORA_features/
 
+5) Copy the GRANADE .json keypoint files from the server, located in /srv/data/shared/GRANADE/KEYPOINTS/ to ./GRANADE_keypoints/
+
+6) Copy and extract the PANDORA depth images from the server, located in /srv/data/shared/GRANADE/RGB_DEPTH/  to ./GRANADE_depth/
 
 # To run feature generation:
 $python main_feature_parse --dataset 1 --depth False --oversampling False --method 2

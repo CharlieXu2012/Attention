@@ -23,8 +23,8 @@ def parse_feats_granade(f_in,f_out,f_in_d,depth,oversample):
 
         if len(data['people']) > 0:
             try:
-                face_feats_all[0,idx] = data['people'][1]['face_keypoints']
-                pose_feats_all[0,idx] = data['people'][1]['pose_keypoints']
+                face_feats_all[0,idx] = data['people'][0]['face_keypoints'] # ----> CHANGE 0 TO 1 TO PARSE THE NEXT PERSON!!!
+                pose_feats_all[0,idx] = data['people'][0]['pose_keypoints'] # ----> CHANGE 0 TO 1 TO PARSE THE NEXT PERSON!!!
             except IndexError:
                 pass
             """try:
@@ -39,17 +39,6 @@ def parse_feats_granade(f_in,f_out,f_in_d,depth,oversample):
             pose_feats_all[0,idx] = np.zeros([54])
             pose_feats_all[1,idx] = np.zeros([54])
     
-        """ Similarity check for false positive detections;
-            check which candidate yields more keypoints, use the one that has
-            more"""
-        """k = np.count_nonzero([pose_feats_all[0,idx,0:2], pose_feats_all[0,idx,3:5], pose_feats_all[0,idx,42:44], pose_feats_all[0,idx,45:47], pose_feats_all[0,idx,6:8], pose_feats_all[0,idx,15:17]])
-        a = np.count_nonzero([pose_feats_all[1,idx,0:2], pose_feats_all[1,idx,3:5], pose_feats_all[1,idx,42:44], pose_feats_all[1,idx,45:47], pose_feats_all[1,idx,6:8], pose_feats_all[1,idx,15:17]])
-
-        if k < a:
-            pose_feats_all[0,idx,:] = pose_feats_all[1,idx,:]
-            face_feats_all[0,idx,:] = face_feats_all[1,idx,:]
-        else:
-            pass"""
 
         """ Nose - Neck """
         pose_feats[idx,0:2] = np.array([pose_feats_all[0,idx,0:2]])
@@ -106,8 +95,15 @@ def parse_feats_granade(f_in,f_out,f_in_d,depth,oversample):
         pose_feats_smooth[i,10:12] = pose_feats_smooth[i,10:12] - pose_feats_smooth[i,0:2]
         pose_feats_smooth[i,26:40] = np.subtract(pose_feats_smooth[i,26:40].reshape((7,2)), pose_feats_smooth[i,0:2]).reshape((1,14))
         pose_feats_smooth[i,40:54] = np.subtract(pose_feats_smooth[i,40:54].reshape((7,2)), pose_feats_smooth[i,0:2]).reshape((1,14))
-
         pose_feats_smooth[i,0:2] = [0, 0]
+
+        """ Recalculate depth to nose depth value """
+        d_list[i,1] = d_list[i,1] - d_list[i,0]
+        d_list[i,2] = d_list[i,2] - d_list[i,0]
+        d_list[i,3] = d_list[i,3] - d_list[i,0]
+        d_list[i,4] = d_list[i,4] - d_list[i,0]
+        d_list[i,5] = d_list[i,5] - d_list[i,0]
+        d_list[i,0] = 0
 
         """ Euclidean distance between all face features. """
         pose_feats_smooth[i,12] = np.linalg.norm(pose_feats_smooth[i,0:2] - pose_feats_smooth[i,4:6])

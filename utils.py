@@ -33,17 +33,12 @@ def cross_validation(pose_feats_smooth, d_list, labels):
     pose_feats_final, d_list = norm_feats(pose_feats_smooth, d_list)
     pose_feats_final, d_list, labels = randomize(pose_feats_final, d_list, labels)
 
-    train = np.zeros([int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64) #Y axes!!!!!
+    train = np.zeros([int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
     gt_train = np.zeros([int(np.floor(len(pose_feats_final)/4)*3)])
     test = np.zeros([int(np.floor(len(pose_feats_final)/4)), 66], dtype=np.float64)
     gt_test = np.zeros([int(np.floor(len(pose_feats_final)/4))-1])
     depth_train = np.zeros([int(np.floor(len(d_list)/4)*3), 6], dtype=np.float64)
     depth_test = np.zeros([int(np.floor(len(d_list)/4)), 6], dtype=np.float64)
-
-    """For LSTM later on"""
-    #train[1][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final),:])
-    #depth_train[1][:,:] = np.array(d_list[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final),:])
-    #gt_train[1,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)]))
 
     """Normal train split"""
     train[:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-1,:])
@@ -63,14 +58,16 @@ def norm_feats(pose_feats_smooth, d_list):
     trainsub = pose_feats_smooth[:,2:66]
 
     for i in range(0 , np.size(trainsub, 1)):
-        minc = np.min(trainsub[:,i])
-        maxc = np.max(trainsub[:,i])
-        trainsub[:,i] = (trainsub[:,i] - minc) / (maxc - minc)
+        """ Standard keypoints and geometric features """
+        meanc = np.mean(trainsub[:,i])
+        stdc = np.std(trainsub[:,i])
+        trainsub[:,i] = (trainsub[:,i]-meanc)/stdc
 
     for j in range(0, d_list.shape[1]):
-        minc = np.min(d_list[:,j])
-        maxc = np.max(d_list[:,j])
-        d_list[:,j] = (d_list[:,j] - minc) / (maxc - minc)
+        """ Standard depth """
+        meanc = np.mean(d_list[:,j])
+        stdc = np.std(d_list[:,j])
+        d_list[:,j] = (d_list[:,j]-meanc)/stdc
 
     pose_feats_smooth[:,2:66] = trainsub
 
@@ -89,6 +86,7 @@ def oversample():
     plot_classes(n_labels)
 
 def sample(pose_feats, d_list, labels):
+    #randomize!
 
     idx0 = np.flatnonzero(labels == 0)
     idx1 = np.flatnonzero(labels == 1)

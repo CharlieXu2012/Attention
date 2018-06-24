@@ -6,8 +6,6 @@ import pandas as pd
 from depth import depthlist
 from feature_smooth import feature_smooth
 from utils import angle_between, cross_validation
-from sklearn import svm, linear_model, neural_network
-from sklearn.decomposition import PCA
 
 def parse_feats(f_in,f_out,f_in_d,depth,oversample):
 
@@ -86,6 +84,7 @@ def parse_feats(f_in,f_out,f_in_d,depth,oversample):
     """ Interpolate for zero feature space elements (name is a bit misleading...) """
 
     pose_feats_smooth = feature_smooth(pose_feats)
+
     if depth==True:
         imagelist_d = os.listdir(f_in_d)
         d_list = depthlist(pose_feats_smooth,imagelist_d,f_in_d)
@@ -105,8 +104,15 @@ def parse_feats(f_in,f_out,f_in_d,depth,oversample):
         pose_feats_smooth[i,10:12] = pose_feats_smooth[i,10:12] - pose_feats_smooth[i,0:2]
         pose_feats_smooth[i,26:40] = np.subtract(pose_feats_smooth[i,26:40].reshape((7,2)), pose_feats_smooth[i,0:2]).reshape((1,14))
         pose_feats_smooth[i,40:54] = np.subtract(pose_feats_smooth[i,40:54].reshape((7,2)), pose_feats_smooth[i,0:2]).reshape((1,14))
-
         pose_feats_smooth[i,0:2] = [0, 0]
+
+        """ Recalculate depth to nose depth value """
+        d_list[i,1] = d_list[i,1] - d_list[i,0]
+        d_list[i,2] = d_list[i,2] - d_list[i,0]
+        d_list[i,3] = d_list[i,3] - d_list[i,0]
+        d_list[i,4] = d_list[i,4] - d_list[i,0]
+        d_list[i,5] = d_list[i,5] - d_list[i,0]
+        d_list[i,0] = 0
 
         """ Euclidean distance between all face features. """
         pose_feats_smooth[i,12] = np.linalg.norm(pose_feats_smooth[i,0:2] - pose_feats_smooth[i,4:6])
@@ -158,7 +164,7 @@ def parse_feats(f_in,f_out,f_in_d,depth,oversample):
     print('\nLoading labels... ')
     pose_feats = pose_feats_smooth
 
-    """ LABELS """
+    """ Load labels """
     data = pd.read_excel('PANDORA_ATTENTION_LABELS.xlsx')
     labels = np.array(data)
     labels = labels[:,1]

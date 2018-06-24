@@ -11,8 +11,6 @@ def run(f_in):
     shape1 = 24
     shape2 = 6
 
-    
-
     if args.model==2:
         if args.fusiontype==1 or args.fusiontype==0:
             model = early_DNN2(shape0,shape1,args.fusiontype)
@@ -142,7 +140,7 @@ def parse_args():
     parser.add_argument('--fusiontype', type=int, default=1, help='Use early (0), fully connected (1) or late (2) fusion.',choices=[0,1,2])
     parser.add_argument('--type', type=int, default=2, help='Use average (0), max (1) or WSLF-LW (2) fusion.',choices=[0,1,2])
     parser.add_argument('--bs', type=int, default=32, help='Batch size.')
-    parser.add_argument('--ep', type=int, default=175, help='Epochs.')
+    parser.add_argument('--ep', type=int, default=50, help='Epochs.')
     return parser.parse_args()
 
 if __name__ == '__main__':

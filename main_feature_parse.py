@@ -10,12 +10,6 @@ from utils import cross_validation, sample, norm_feats
 """
 Main method for feature extraction and crafting.
 
-Arguments:
-    --depth:        Wether to perform depth feature extraction or load dataset.
-                    NOTE, that since depth extraction performs slow, we included the extracted depth along the code.
-    --oversampling: Wether or not to perform over-sampling of minority clases. By default, the majority classes
-                    are under-sampled.
-    --method:       The method for oversampling.
 Input(s):
     - f_in: input folder of .JSON files (String)
     - f_in_d: input folder of depth images (String)
@@ -36,6 +30,7 @@ def run(f_in,f_out,f_in_d):
     if args.dataset==0:
         pose_feats, d_list, labels = parse_feats(f_in,f_out,f_in_d,args.depth,args.oversampling)
         if args.oversampling==False:
+            #pose_feats, d_list, labels = sample(pose_feats, d_list, labels)
             pose_feats, d_list, labels = sample(pose_feats, d_list, labels)
             test, train, gt_test, gt_train, depth_train, depth_test = cross_validation( pose_feats, d_list, labels)
             np.save(f_out + 'train',train)
@@ -78,7 +73,7 @@ def run(f_in,f_out,f_in_d):
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dataset', type=int, default=0, help='Wether to use PANDORA (0) or GRANADE (1).')
-    parser.add_argument('--depth', type=bool, default=False, help='Wether to perform depth feature extraction or load dataset.')
+    parser.add_argument('--depth', type=bool, default=True, help='Wether to perform depth feature extraction or load dataset.')
     parser.add_argument('--oversampling', type=bool, default=False, help='Wether or not to perform oversampling of minority clases.')
     parser.add_argument('--method', type=int, default=2, help='Method for oversampling: 1)None 2)SMOTE 3)ADASYN.',choices=[0,1,2])
     return parser.parse_args()

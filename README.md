@@ -1,4 +1,4 @@
-# masters-repo
+# Subjective Annotations for Vision-Based Attention Level Estimation
 
 # Pre-requisites:
   - Python 3.5.4
@@ -10,19 +10,15 @@
 # Installation:
 1) Install all pre-requisites.
 2) Clone the repository.
-3) Copy the PANDORA .json keypoint files from the server, located in /srv/data/shared/PANDORA/KEYPOINTS/ to ./PANDORA_keypoints/
+3) Run the default OpenPose keypoint extraction (JSON Output with No Visualization https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/demo_overview.md) on the selected Pandora RGB images. The list of selected image names can be found in ./PANDORA_ATTENTION_LABELS.xlsx.
 
 IF you want to run depth extraction:
 
-4) Copy and extract the PANDORA depth images from the server, located in /srv/data/shared/PANDORA/DEPTH/ or /srv/data/shared/PANDORA/PANDORA_DEPTH_cropped/ to ./PANDORA_depth/
+4) Copy and extract the PANDORA depth image pairs, and run ./padcrop.py with output folder ./PANDORA_depth/.
 
 IF not:
 
 4) Move the file from ./PANDORA_depth/Pre/ to ./PANDORA_features/
-
-5) Copy the GRANADE .json keypoint files from the server, located in /srv/data/shared/GRANADE/KEYPOINTS/ to ./GRANADE_keypoints/
-
-6) Copy and extract the PANDORA depth images from the server, located in /srv/data/shared/GRANADE/RGB_DEPTH/  to ./GRANADE_depth/
 
 # To run feature generation:
 $python main_feature_parse --dataset 1 --depth False --oversampling False --method 2
@@ -31,7 +27,7 @@ Arguments:
 
   --dataset: Wether to use PANDORA (0) or GRANADE (1)., type=int, default=0
   
-  --depth: Wether to perform depth feature extraction or load dataset., type=bool, default=False
+  --depth: Wether to perform depth feature extraction or load depth .npy array., type=bool, default=False
   
   --oversampling: Wether or not to perform oversampling of minority clases., type=bool, default=False
   
